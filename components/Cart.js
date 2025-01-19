@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux';
+import { removeFromCart } from '../redux_toolkit/CartSlice';
 
 const Cart = () => {
     const navigation = useNavigation()
   
-
-
+    const dispatch = useDispatch()
+    const items = useSelector(state => state.cart)
    
     const removeItem = (index) => {
-       
+       dispatch(removeFromCart(index))
     }
 
 
@@ -23,20 +25,20 @@ const Cart = () => {
                 <TouchableOpacity style={styles.cartIcon} onPress={() => { navigation.navigate('Cart') }}>
                     <AntDesign name="shoppingcart" size={24} color="black" />
                     <View style={styles.cartCounter}>
-                        <Text style={styles.cartCounterText}>0</Text>
+                        <Text style={styles.cartCounterText}>{items.length}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
             <FlatList
                 contentContainerStyle={styles.list}
-                data={[]}
+                data={items}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item, index }) => (
                     <View style={styles.productContainer}>
                         <Image source={{ uri: item.image }} style={styles.productImage} />
                         <Text style={styles.productName}>{item.name}</Text>
                         <Text style={styles.productPrice}>{item.price}</Text>
-                        <TouchableOpacity style={styles.addButton} onPress={() => removeItem(item.id)}>
+                        <TouchableOpacity style={styles.addButton} onPress={() => removeItem(index)}>
                             <AntDesign name="delete" size={20} color="white" />
                         </TouchableOpacity>
                     </View>)

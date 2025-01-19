@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../redux_toolkit/CartSlice';
 
 
 const App = () => {
     const navigation = useNavigation()
 
-   
+   const dispatch = useDispatch()
     const addItem = (data) => { 
-        console.log(data)
       
+        dispatch(addToCart(data))
     }
-
-    
+ const items = useSelector(state => state.cart)
+     console.log(items)
 
     const products = [
         {
@@ -97,7 +99,7 @@ const App = () => {
                 <TouchableOpacity style={styles.cartIcon} onPress={() => { navigation.navigate('Cart') }}>
                     <AntDesign name="shoppingcart" size={24} color="black" />
                     <View style={styles.cartCounter}>
-                        <Text style={styles.cartCounterText}>0</Text>
+                        <Text style={styles.cartCounterText}>{items.length}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
